@@ -39,7 +39,15 @@ const ContactForm = () => {
     <form className={css.form} onSubmit={handleSubmit}>
       <label className={css.label}>
         Name
-        <input className={css.input} type="text" name="name" required />
+        <input
+          className={css.input}
+          type="text"
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces."
+          required
+          placeholder="Enter name"
+        />
       </label>
 
       <label className={css.label}>
@@ -48,9 +56,10 @@ const ContactForm = () => {
           className={css.input}
           type="tel"
           name="number"
-          placeholder="000-00-00"
-          pattern="[0-9]{3}-[0-9]{2}-[0-9]{2}"
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
+          placeholder="Enter number"
         />
       </label>
       <button className={css.button} type="submit">
