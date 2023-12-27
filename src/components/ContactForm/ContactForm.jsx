@@ -1,40 +1,45 @@
-// import { Component } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import css from './ContactForm.module.css';
-import { useState } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
+import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contactsSlice';
 
-const ContactForm = ({ onSubmit }) => {
-  const [contactElement, setContactElement] = useState({
-    name: '',
-    number: '',
-  });
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setContactElement(prev => ({ ...prev, [name]: value }));
-  };
+  console.log(contacts);
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit(contactElement);
-    reset();
-  };
 
-  const reset = () => {
-    setContactElement({ name: '', number: '' });
+    const newContactName = e.target.elements.name.value;
+
+    const isContactExist =
+      contacts &&
+      contacts.some(
+        contact => contact.name.toLowerCase() === newContactName.toLowerCase()
+      );
+
+    if (isContactExist) {
+      alert('Contact with this name already exist!');
+      e.target.reset();
+      return;
+    }
+    const newContact = {
+      id: nanoid(),
+      name: e.target.elements.name.value,
+      number: e.target.elements.number.value,
+    };
+    dispatch(addContact(newContact));
+    e.target.reset();
   };
 
   return (
     <form className={css.form} onSubmit={handleSubmit}>
       <label className={css.label}>
         Name
-        <input
-          className={css.input}
-          type="text"
-          name="name"
-          onChange={handleChange}
-          value={contactElement.name}
-          required
-        />
+        <input className={css.input} type="text" name="name" required />
       </label>
 
       <label className={css.label}>
@@ -43,8 +48,8 @@ const ContactForm = ({ onSubmit }) => {
           className={css.input}
           type="tel"
           name="number"
-          onChange={handleChange}
-          value={contactElement.number}
+          placeholder="000-00-00"
+          pattern="[0-9]{3}-[0-9]{2}-[0-9]{2}"
           required
         />
       </label>
@@ -55,65 +60,3 @@ const ContactForm = ({ onSubmit }) => {
   );
 };
 export default ContactForm;
-
-// class ContactForm extends Component {
-//   state = {
-//     name: '',
-//     number: '',
-//   };
-
-//   handleSubmit = e => {
-//     e.preventDefault();
-//     this.props.onSubmit({ name: this.state.name, number: this.state.number });
-//     this.reset();
-//   };
-
-//   handleChange = e => {
-//     const { name, value } = e.target;
-//     this.setState({ [name]: value });
-//   };
-
-//   reset = () => {
-//     this.setState({
-//       name: '',
-//       number: '',
-//     });
-//   };
-
-//   render() {
-//     const { name, number } = this.state;
-
-//     return (
-//       <form className={css.form} onSubmit={this.handleSubmit}>
-//         <label className={css.label}>
-//           Name
-//           <input
-//             className={css.input}
-//             type="text"
-//             name="name"
-//             onChange={this.handleChange}
-//             value={name}
-//             required
-//           />
-//         </label>
-
-//         <label className={css.label}>
-//           Number
-//           <input
-//             className={css.input}
-//             type="tel"
-//             name="number"
-//             onChange={this.handleChange}
-//             value={number}
-//             required
-//           />
-//         </label>
-//         <button className={css.button} type="submit">
-//           Add contact
-//         </button>
-//       </form>
-//     );
-//   }
-// }
-
-// export default ContactForm;

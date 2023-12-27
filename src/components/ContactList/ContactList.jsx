@@ -1,18 +1,28 @@
-import ContactItem from '../ContactItem/ContactItem';
+import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import { getContacts, getFilter } from 'redux/selectors';
+
+import ContactItem from 'components/ContactItem/ContactItem.jsx';
 import css from './ContactList.module.css';
 
-const ContactList = ({ contacts, removeContact }) => {
-  return (
+const ContactList = () => {
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+
+  const listOfContact = useMemo(() => {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().trim().includes(filter.toLowerCase().trim())
+    );
+  }, [contacts, filter]);
+
+  return listOfContact.length > 0 ? (
     <ul className={css.list}>
-      {contacts.map(({ name, id, number }) => (
-        <ContactItem
-          key={id}
-          name={name}
-          number={number}
-          removeContact={() => removeContact(id)}
-        />
+      {listOfContact.map(({ name, id, number }) => (
+        <ContactItem key={id} name={name} id={id} number={number} />
       ))}
     </ul>
+  ) : (
+    <p>No contact exists</p>
   );
 };
 
