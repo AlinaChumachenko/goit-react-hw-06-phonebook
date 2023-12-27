@@ -1,5 +1,5 @@
-import { contactsReducer } from './contactsSlice';
-import { filterReducer } from './filterSlice';
+import { contactsReducer } from './contactsSlice.js';
+import { filterReducer } from './filterSlice.js';
 import storage from 'redux-persist/lib/storage';
 
 import {

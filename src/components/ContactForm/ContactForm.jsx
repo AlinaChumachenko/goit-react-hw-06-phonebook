@@ -8,8 +8,6 @@ const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
 
-  console.log(contacts);
-
   const handleSubmit = e => {
     e.preventDefault();
 
